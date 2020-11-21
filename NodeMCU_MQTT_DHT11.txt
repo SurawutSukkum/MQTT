@@ -88,9 +88,9 @@ bool blinkState = false;
 
 // Update these with values suitable for your network.
 
-const char* ssid = "DESKTOP-LVN60EJ 0112";
-const char* password = "235@G3f4";
-const char* mqtt_server = "192.168.137.87";
+const char* ssid = "HOST_NAME";
+const char* password = "PASSWORD";
+const char* mqtt_server = "IP";//Ex. 192.168.137.87
 
 WiFiClient espClient;
 PubSubClient client(espClient);
