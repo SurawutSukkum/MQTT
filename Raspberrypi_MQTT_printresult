@@ -1,0 +1,15 @@
+import paho.mqtt.publish as publish
+import paho.mqtt.subscribe as subscribe
+import time
+hostname = "192.168.137.87"
+port = 1883
+auth = {
+ 'username':'mymqtt',
+ 'password':'12345678'
+}
+while True:
+ print("Sending 1...")
+ publish.single("inTopic","From Rpi4 test", hostname=hostname, port=port, auth=auth)
+ time.sleep(6)
+ msg = subscribe.simple("outTopic/",  hostname=hostname, port=port, auth=auth)
+ print("%s %s" % (msg.topic, msg.payload))
