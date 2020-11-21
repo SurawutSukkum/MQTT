@@ -1,0 +1,26 @@
+import paho.mqtt.publish as publish
+import paho.mqtt.subscribe as subscribe
+from guizero import App
+from guizero import App, Text
+import time
+
+hostname = "192.168.137.87"
+port = 1883
+auth = {
+ 'username':'mymqtt',
+ 'password':'12345678'
+}
+app = App(title='Sensor Display!',height=300,width=600,bg="black")
+
+def readsensor():
+    publish.single("inTopic","From Rpi4 test", hostname=hostname, port=port, auth=auth)
+    msg = subscribe.simple("outTopic/",  hostname=hostname, port=port, auth=auth)
+    print("%s %s " % (msg.topic, msg.payload))
+    text.value = (msg.topic,msg.payload)
+ 
+print("Sending 1...")
+text = Text(app, text= "START", size=15, font="Times New Roman", color="white")
+time.sleep(1)
+text.repeat(1000,readsensor)
+app.display()
+
