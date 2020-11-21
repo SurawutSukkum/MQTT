@@ -1,0 +1,50 @@
+import paho.mqtt.publish as publish
+import paho.mqtt.subscribe as subscribe
+from guizero import App
+from guizero import App, Text
+from guizero import App, PushButton
+import time
+
+i = 0
+hostname = "192.168.137.87"
+port = 1883
+
+
+auth = {
+ 'username':'mymqtt',
+ 'password':'12345678'
+}
+app = App(title='Sensor Display!',height=300,width= 300,bg="blue")
+def start():
+    start_button.disable()
+    stop_button.enable()
+    print("RELAY1 ON")
+    publish.single("inTopic","RELAY1 ON", hostname=hostname, port=port, auth=auth)
+ 
+def stop():
+    start_button.enable()
+    stop_button.disable()
+    print("RELAY1 OFF")
+    publish.single("inTopic","RELAY1 OFF", hostname=hostname, port=port, auth=auth)
+      
+def readsensor():
+    global i
+    i = i + 1
+    msg = subscribe.simple("outTopic/",  hostname=hostname, port=port, auth=auth)
+    print("%s %s " % (msg.topic, msg.payload))
+    splittedString = msg.payload.decode().split(',')   
+    text1.value = splittedString[14]+ " °C" 
+    print(i)
+    
+print("Sending 1...")
+text = Text(app, text= "อุณหภูมิ ", size=30,align ="top", font="Times New Roman", color="white")
+text1 = Text(app, text= "", size=25,align ="top", font="Times New Roman", color="white")
+text2 = Text(app, text= "ปราจีนบุรี", size=20, font="Times New Roman", color="white")
+
+start_button = PushButton(app, command=start, text="RELAY1 ON")
+stop_button = PushButton(app, command=stop, text="RELAY1 OFF", enabled=False)
+time.sleep(1)
+text.repeat(1000,readsensor)
+text1.repeat(1000,readsensor)
+app.display()
+
